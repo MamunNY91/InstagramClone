@@ -8,16 +8,39 @@
 
 import UIKit
 import Firebase
-class ViewController: UIViewController {
+class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     let plusButtonPhoto:UIButton =
     {
         let button = UIButton(type:.system)
         let img = UIImage(named: "plus_photo")
         button.setImage(img?.withRenderingMode(.alwaysOriginal), for: .normal)
-        
+        button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
         return button
     }()
+    @objc func handlePlusPhoto()
+    {
+       let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    {
+        if   let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage
+        {
+           plusButtonPhoto.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
+           
+        }
+        else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage
+        {
+            plusButtonPhoto.setImage(originalImage, for: .normal)
+        }
+        plusButtonPhoto.layer.cornerRadius = plusButtonPhoto.frame.width/2
+        plusButtonPhoto.layer.masksToBounds = true
+        dismiss(animated: true, completion: nil)
+        
+    }
     let emailTextField:UITextField  =
     {
         let tf = UITextField()
@@ -76,7 +99,39 @@ class ViewController: UIViewController {
                 print("Failed to create user",err)
                 return
             }
+            
+            
             print("Successfully created user",user?.uid ?? "")
+            // for saving profile image
+            guard  let image = self.plusButtonPhoto.imageView?.image else { return }
+            guard let uploadData = UIImageJPEGRepresentation(image, 0.3) else{return}
+            let fileName = NSUUID().uuidString
+            
+            Storage.storage().reference().child("profile_images").child(fileName).putData(uploadData, metadata: nil, completion: { (metadata, err) in
+                if let err = err
+                {
+                    print("Failed to create store profile image", err)
+                    return
+                }
+               
+                 print("Successfully saved image into Storage")
+                 guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else {return}
+                // for saving username
+                guard let uid = user?.uid else{return}
+                let userNameValues = ["UserName":username,"profileImageUrl": profileImageUrl]
+                let values = [uid:userNameValues]
+                Database.database().reference().child("Username").updateChildValues(values, withCompletionBlock: { (err, ref) in
+                    if let err  = err
+                    {
+                        print("Failed to save data into DB ",err)
+                        return
+                    }
+                    print("Successfully saved data into DB")
+                })
+            })
+            
+            
+            
         }
     }
     @objc func handleTextInputChange()
