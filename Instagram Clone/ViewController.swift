@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Instagram Clone
 //
-//  Created by Abdullah A Mamun on 12/27/17.
+//  Created by Samuel Mamun on 12/27/17.
 //  Copyright © 2017 Samuel Mamun. All rights reserved.
 //
 
