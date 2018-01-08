@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+class SignUpController: UIViewController,UIImagePickerControllerDelegate,UINavigationControllerDelegate {
 
     let plusButtonPhoto:UIButton =
     {
@@ -154,6 +154,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UINavigat
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        view.backgroundColor = .white
         view.addSubview(plusButtonPhoto)
         view.addSubview(emailTextField)
         plusButtonPhoto.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

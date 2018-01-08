@@ -20,6 +20,29 @@ class UserProfileController: UICollectionViewController,UICollectionViewDelegate
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerId")
         fetchUser()
         collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+        setupLogoutButton()
+    }
+    fileprivate func setupLogoutButton()
+    {
+        let img = UIImage(named: "gear")?.withRenderingMode(.alwaysOriginal)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: #selector(handleLogout))
+    }
+    @objc func handleLogout() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
+           do
+            {
+               try Auth.auth().signOut()
+            } catch let signUpErr
+            {
+               print("Failed to sign out",signUpErr)
+            }
+            
+            
+        }))  // log out
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil)) // cancel alert action
+        
+        present(alertController, animated: true, completion: nil)
     }
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "headerId", for: indexPath) as! UserProfileHeader

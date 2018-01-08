@@ -93,10 +93,19 @@ class UserProfileHeader: UICollectionViewCell {
         return btn
         
     }()
+    let headerTopDividor:UIView = {
+        let ht = UIView()
+        ht.backgroundColor = UIColor.lightGray
+        return ht
+    }()
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        //need to fix this
+        addSubview(headerTopDividor)
+        headerTopDividor.anchor(top: topAnchor, paddingTop: 0, left: leftAnchor, paddingLeft: 0, right: rightAnchor, padingRight: 0, bottom: nil, paddingBottom: 0, width: 0, height: 0.5)
+        //------------------------------------------------------------
         addSubview(profileImageView)
         profileImageView.anchor(top: self.topAnchor, paddingTop: 12, left: self.leftAnchor, paddingLeft: 12, right: nil, padingRight: 0, bottom: nil, paddingBottom: 0, width: 80, height: 80)
        
