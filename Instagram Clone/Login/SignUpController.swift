@@ -151,6 +151,24 @@ class SignUpController: UIViewController,UIImagePickerControllerDelegate,UINavig
             signUpButton.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
         }
     }
+    
+    let alreadyHaveAccountButton:UIButton = {
+        let btn = UIButton(type: .system)
+        let attributedText = NSMutableAttributedString(string: "Already have an account? ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14),NSAttributedStringKey.foregroundColor: UIColor.lightGray ])
+        attributedText.append(NSAttributedString(string: "Sign In", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
+        btn.setAttributedTitle(attributedText, for: .normal)
+        btn.addTarget(self, action: #selector(handleAlreadyHaveAccountButton), for: .touchUpInside)
+        
+        return btn
+    }()
+    @objc func handleAlreadyHaveAccountButton()  {
+        /*
+        let loginController = LoginController()
+        navigationController?.pushViewController(loginController, animated: true)
+       */
+        navigationController?.popViewController(animated: true)
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -159,6 +177,8 @@ class SignUpController: UIViewController,UIImagePickerControllerDelegate,UINavig
         view.addSubview(emailTextField)
         plusButtonPhoto.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         plusButtonPhoto.anchor(top: view.topAnchor, paddingTop: 40, left: nil, paddingLeft: 0, right: nil, padingRight: 0, bottom: nil, paddingBottom: 0, width: 140, height: 140)
+        view.addSubview(alreadyHaveAccountButton)
+        alreadyHaveAccountButton.anchor(top: nil, paddingTop: 0, left: view.leftAnchor, paddingLeft: 0, right: view.rightAnchor, padingRight: 0, bottom: view.bottomAnchor, paddingBottom: 0, width: 0, height: 50)
         setupInputFields()
     }
     fileprivate func setupInputFields()
