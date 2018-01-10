@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 class LoginController: UIViewController {
     let logoContainerView:UIView =
     {
@@ -80,7 +81,7 @@ class LoginController: UIViewController {
     }
     let loginButton:UIButton =
     {
-        let btn = UIButton()
+        let btn = UIButton(type: .system)
         btn.setTitle("Login", for: .normal)
         btn.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
         btn.layer.cornerRadius = 5
@@ -92,7 +93,19 @@ class LoginController: UIViewController {
     }()
     @objc func handleLogin()
        {
-          print(123)
+        guard let email = emailTextField.text else{return}
+        guard let password = passwordField.text else {return}
+        Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
+            if let err = err
+            {
+                print("Failed to login ", err)
+                return
+            }
+            print("Successfully logged in user ", user?.uid ?? "")
+            guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else {return}
+            mainTabBarController.setupViewControllers()
+            self.dismiss(animated: true, completion: nil)
+        }
        }
     override func viewDidLoad() {
         super.viewDidLoad()
