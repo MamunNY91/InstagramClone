@@ -29,12 +29,34 @@ class MainTabBarController: UITabBarController
     }
     func setupViewControllers()
     {
-        let layout = UICollectionViewFlowLayout()
-        let userProfileVC = UserProfileController(collectionViewLayout: layout)
-        let navController = UINavigationController(rootViewController: userProfileVC)
-        navController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
-        navController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
+        //home controller
+        let homeNavController = templateNavController(imgUnselected: "home_unselected", imgSelected: "home_selected", rootViewController: UserProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+        //like controller
+        let likeNavController = templateNavController(imgUnselected: "like_unselected", imgSelected: "like_selected")
+        // search controller
+        let searchNavController = templateNavController(imgUnselected: "search_unselected", imgSelected: "search_selected")
+        // plus controller
+        let plusNavController = templateNavController(imgUnselected: "plus_unselected", imgSelected: "plus_unselected")
+        //user profile controller
+        let userProfileNavController = templateNavController(imgUnselected: "profile_unselected", imgSelected: "profile_selected", rootViewController: UserProfileController(collectionViewLayout: UICollectionViewFlowLayout()))
+        
         tabBar.tintColor = .black
-        viewControllers = [navController, UIViewController()]
+        viewControllers = [homeNavController,searchNavController,plusNavController,likeNavController,userProfileNavController]
+        //set tab bar item to the center
+        guard let items = tabBar.items else {
+            return
+        }
+        for item in items
+        {
+              item.imageInsets = UIEdgeInsetsMake(4, 0, -4, 0)
+        }
+    }
+    fileprivate func templateNavController(imgUnselected:String, imgSelected:String,rootViewController:UIViewController = UIViewController() ) -> UINavigationController
+    {
+        let viewController = rootViewController
+        let viewNavController = UINavigationController(rootViewController: viewController)
+        viewNavController.tabBarItem.image = UIImage(named: imgUnselected)
+        viewNavController.tabBarItem.selectedImage = UIImage(named: imgSelected)
+        return viewNavController
     }
 }
