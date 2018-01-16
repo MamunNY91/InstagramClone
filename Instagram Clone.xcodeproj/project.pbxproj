@@ -16,6 +16,7 @@
 		6481AFA51FF40316007006A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6481AFA31FF40316007006A5 /* LaunchScreen.storyboard */; };
 		6492ABB11FF8052F0012E1C1 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6492ABB01FF8052F0012E1C1 /* MainTabBarController.swift */; };
 		6492ABB31FF80A990012E1C1 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6492ABB21FF80A990012E1C1 /* UserProfileController.swift */; };
+		64C01465200C39960031DAA0 /* PhotoSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C01464200C39960031DAA0 /* PhotoSelectorController.swift */; };
 		64F53E221FF57E880065ED98 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64F53E211FF57E880065ED98 /* Extension.swift */; };
 		64F53E241FF58B7E0065ED98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 64F53E231FF58B7E0065ED98 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -32,6 +33,7 @@
 		6481AFA61FF40316007006A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6492ABB01FF8052F0012E1C1 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		6492ABB21FF80A990012E1C1 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
+		64C01464200C39960031DAA0 /* PhotoSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorController.swift; sourceTree = "<group>"; };
 		64F53E211FF57E880065ED98 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		64F53E231FF58B7E0065ED98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B294EA4EC909341203D3E906 /* Pods-Instagram Clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.release.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.release.xcconfig"; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		6481AF991FF40316007006A5 /* Instagram Clone */ = {
 			isa = PBXGroup;
 			children = (
+				64C01463200C390A0031DAA0 /* Add Photo */,
 				642CE1AC1FFF180F00F3F89F /* Login */,
 				64321F4D1FF9959300D3DEA6 /* UserProfile */,
 				64F53E201FF57E630065ED98 /* Util */,
@@ -100,6 +103,14 @@
 				6481AFA61FF40316007006A5 /* Info.plist */,
 			);
 			path = "Instagram Clone";
+			sourceTree = "<group>";
+		};
+		64C01463200C390A0031DAA0 /* Add Photo */ = {
+			isa = PBXGroup;
+			children = (
+				64C01464200C39960031DAA0 /* PhotoSelectorController.swift */,
+			);
+			path = "Add Photo";
 			sourceTree = "<group>";
 		};
 		64F53E201FF57E630065ED98 /* Util */ = {
@@ -257,6 +268,7 @@
 				6492ABB31FF80A990012E1C1 /* UserProfileController.swift in Sources */,
 				6481AF9B1FF40316007006A5 /* AppDelegate.swift in Sources */,
 				642CE1AE1FFF183B00F3F89F /* LoginController.swift in Sources */,
+				64C01465200C39960031DAA0 /* PhotoSelectorController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

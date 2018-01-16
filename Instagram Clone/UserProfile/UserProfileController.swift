@@ -20,6 +20,7 @@ class UserProfileController: UICollectionViewController,UICollectionViewDelegate
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerId")
         fetchUser()
         collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier: cellId)
+       
         setupLogoutButton()
     }
     fileprivate func setupLogoutButton()
