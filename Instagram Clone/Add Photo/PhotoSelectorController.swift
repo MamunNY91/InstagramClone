@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Photos
+
 
 class PhotoSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let cellId  = "cellId"
@@ -17,8 +19,9 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         super.viewDidLoad()
         collectionView?.backgroundColor = .yellow
         setupNavigationButtons()
-        collectionView?.register(UICollectionViewCell.self, forCellWithReuseIdentifier:cellId )
+        collectionView?.register(PhotoSelectorCell.self, forCellWithReuseIdentifier:cellId )
          collectionView?.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
+        fetchPhotos()
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         let width = view.frame.width
@@ -31,11 +34,12 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-     return 5
+     return images.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath)
-        cell.backgroundColor = .blue
+            as! PhotoSelectorCell
+        cell.photoImageView.image = images[indexPath.item]
         return cell
     }
     // in order to modify size of the cell conform to UICollectionViewDelegateFlowLayout protocol
@@ -64,10 +68,40 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(handleCancel))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(handleNext))
     }
-   @objc func handleCancel() {
+   @objc func handleCancel()
+    {
         dismiss(animated: true, completion: nil)
     }
    @objc func handleNext()  {
-        print(123)
+        print(images.count)
+    }
+    var images = [UIImage]()
+   fileprivate func fetchPhotos()
+    {
+        
+        let phfetchOptions = PHFetchOptions()
+        let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
+        phfetchOptions.sortDescriptors = [sortDescriptor]
+        
+        phfetchOptions.fetchLimit = 10
+       let allPhotos = PHAsset.fetchAssets(with: .image, options: phfetchOptions)
+        allPhotos.enumerateObjects { (asset, count , stop ) in
+            
+            let imageManager = PHImageManager.default()
+            let targetSize = CGSize(width: 350, height: 350)
+            let options = PHImageRequestOptions()
+            options.isSynchronous = true
+            imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: .aspectFit, options: options, resultHandler: { (image, info) in
+                if let image = image
+                {
+                    self.images.append(image)
+                    
+                }
+                if count == allPhotos.count - 1
+                {
+                    self.collectionView?.reloadData()
+                }
+            })
+        }
     }
 }
