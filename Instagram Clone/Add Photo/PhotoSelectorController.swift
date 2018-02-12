@@ -16,6 +16,9 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     var images = [UIImage]()
     var selectedImage:UIImage?
     var assets = [PHAsset]()
+    var header: PhotoSelectorHeader?
+    
+    var moreImages = [UIImage]() // it is created to test auto scroll. delete it later.
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +34,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
     }
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath) as! PhotoSelectorHeader
+        self.header = header
             header.imageView.image = selectedImage
         if let selectedImage = selectedImage
         {
@@ -48,16 +52,18 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         return header
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.selectedImage  = images[indexPath.item]
+        self.selectedImage  = moreImages[indexPath.item]
         self.collectionView?.reloadData()
+        let indexPath = IndexPath(item: 0, section: 0)
+        collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
     }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-     return images.count
+     return moreImages.count
     }
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellId", for: indexPath)
             as! PhotoSelectorCell
-        cell.photoImageView.image = images[indexPath.item]
+        cell.photoImageView.image = moreImages[indexPath.item]
         return cell
     }
     // in order to modify size of the cell conform to UICollectionViewDelegateFlowLayout protocol
@@ -91,7 +97,9 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         dismiss(animated: true, completion: nil)
     }
    @objc func handleNext()  {
-        print(images.count)
+        let sharePhotoCon = SharePhotoController()
+    sharePhotoCon.selectedImage = header?.imageView.image
+          navigationController?.pushViewController(sharePhotoCon, animated: true)
     }
     
    fileprivate func fetchPhotos()
@@ -110,6 +118,8 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
                     if let image = image
                     {
                         self.images.append(image)
+                        // for creating more cells with images so that we can test auto scroll
+                        self.displayMoreImages(img: image)
                         self.assets.append(asset)
                         if self.selectedImage == nil
                         {
@@ -134,7 +144,15 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         let fetchOptions = PHFetchOptions()
         let sortDescriptor = NSSortDescriptor(key: "creationDate", ascending: false)
         fetchOptions.sortDescriptors = [sortDescriptor]
-        fetchOptions.fetchLimit = 10
+        fetchOptions.fetchLimit = 30
         return fetchOptions
+    }
+    func displayMoreImages(img:UIImage)
+    {
+        for _ in 1...5
+        {
+            self.moreImages.append(img)
+           
+        }
     }
 }
