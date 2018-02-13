@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 class SharePhotoController: UIViewController {
     var selectedImage: UIImage?
     {
@@ -28,7 +29,7 @@ class SharePhotoController: UIViewController {
     {
         let tv = UITextView()
         tv.font = UIFont.systemFont(ofSize: 14)
-        tv.text = "write description of the image"
+        tv.placeholder = "Add description of your image"
         return tv
     }()
     override func viewDidLoad() {
@@ -39,7 +40,23 @@ class SharePhotoController: UIViewController {
     }
     override var prefersStatusBarHidden: Bool{return true}
     @objc func handleShare()  {
-        print("Sharing photo")
+        guard let caption = textView.text , caption.count > 0 else {return}
+        // if we add guard statement if the statement becomes false next line does not execute
+        guard let image = selectedImage else {return}
+        guard let uploadImage = UIImageJPEGRepresentation(image, 0.5) else {return}
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        let fileName = NSUUID().uuidString
+        Storage.storage().reference().child("posts").child(fileName).putData(uploadImage, metadata: nil) { (metadata, err) in
+            if let err = err
+            {
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Failed to post image ", err)
+                return
+            }
+            guard let imageUrl = metadata?.downloadURL()?.absoluteString else {return}
+            print("successfully uploaded image" ,  imageUrl)
+            self.saveToDatabaseWithImageUrl(imageUrl: imageUrl)
+        }
     }
     
     fileprivate func setupImageAndTextView()
@@ -59,5 +76,25 @@ class SharePhotoController: UIViewController {
         imageView.anchor(top: containerView.topAnchor, paddingTop: 8, left: containerView.leftAnchor, paddingLeft: 8, right: nil, padingRight: 0, bottom: containerView.bottomAnchor, paddingBottom: 8, width:84 , height: 0)
         textView.anchor(top: containerView.topAnchor, paddingTop: 0, left: imageView.rightAnchor, paddingLeft: 8, right: containerView.rightAnchor, padingRight: 0, bottom: containerView.bottomAnchor, paddingBottom: 0, width: 0, height: 0)
         
+    }
+    fileprivate func saveToDatabaseWithImageUrl(imageUrl: String)
+    {
+        guard  let postImage = selectedImage else {return}
+        guard let caption = textView.text else {return}
+        guard let uid = Auth.auth().currentUser?.uid else {return}
+       let userPostRef =  Database.database().reference().child("posts").child(uid)
+       let ref =  userPostRef.childByAutoId()
+        let values = ["imageUrl" : imageUrl, "caption":caption, "imageWidth":postImage.size.width,
+                      "imageHeight":postImage.size.height,"creationDate": Date().timeIntervalSince1970] as [String : Any]
+        ref.updateChildValues(values) { (err, ref) in
+            if let err = err
+            {
+                 self.navigationItem.rightBarButtonItem?.isEnabled = true
+                print("Failed to save post to DB", err)
+                return
+            }
+            print("Successfully saved post to DB")
+            self.dismiss(animated: true, completion: nil)
+        }
     }
 }
