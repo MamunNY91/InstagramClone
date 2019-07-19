@@ -1,2 +1,2 @@
 # InstagramClone
-This is an app similar to Instagram clone. This app has been created programmatically not using Interface Builder. 
+This app allows users to create account ,take pictures and share photos with others.
